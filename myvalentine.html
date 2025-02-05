@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        /* CSS Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            font-family: 'Arial', cursive;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff2768;
+            animation: float 6s linear infinite;
+            opacity: 0;
+        }
+
+        #reasons {
+            display: none;
+            margin: 2rem auto;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .reason {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            margin: 1rem;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            transform: scale(0);
+            transition: transform 0.5s ease-out;
+        }
+
+        button {
+            background: #ff2768;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin: 1rem;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+        }
+        button {
+            transition: all 0.3s ease !important;
+        }
+
+        #responseButtons {
+            display: none;
+        }
+
+        #noBtn {
+            transition: all 0.3s;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 2rem;
+            max-width: 1000px;
+        }
+
+        .photo {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .photo:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+    
+    <div class="container">
+        <h1>🌸 [Her Name], Will You Be My Valentine? 🌸</h1>
+        
+        <button onclick="revealReasons()">Click to See Why ❤️</button>
+        
+        <div id="reasons">
+            <div class="reason">1. Your smile makes my day brighter</div>
+            <div class="reason">2. You have the most amazing [specific quality]</div>
+            <div class="reason">3. I love how we [shared memory]</div>
+            <div class="reason">4. You inspire me to be better</div>
+            <div class="reason">5. I can't stop thinking about you</div>
+        </div>
+
+        <div class="photo-grid">
+            <!-- Add your photos -->
+            <img src="memory1.jpg" class="photo" alt="Our Memory">
+            <img src="memory2.jpg" class="photo" alt="Our Memory">
+            <img src="memory3.jpg" class="photo" alt="Our Memory">
+        </div>
+
+        <div id="responseButtons">
+            <button onclick="handleYes()">YES! 😍</button>
+            <button id="noBtn" onmouseover="dodgeNo()">Hmm... 😅</button>
+        </div>
+    </div>
+
+    <script>
+
+
+
+        let noClicks = 0;
+        const maxNoClicks = 10;
+
+        // Modified handleNo function
+        function handleNo() {
+            noClicks++;
+            const noButton = document.getElementById('noBtn');
+            const yesButton = document.querySelector('#responseButtons button:first-child');
+            
+            // Calculate scaling factors
+            const noScale = Math.max(1 - (noClicks * 0.1), 0);
+            const yesScale = 1 + (noClicks * 0.1);
+            
+            // Apply transformations
+            noButton.style.transform = `scale(${noScale})`;
+            yesButton.style.transform = `scale(${yesScale})`;
+            
+            // Add funny messages
+            const messages = [
+                "Are you sure?",
+                "Really sure?",
+                "Think again!",
+                "Last chance!",
+                "Don't do this!",
+                "I'm gonna cry...",
+                "You're breaking my heart!",
+                "Please reconsider!",
+                "Just one more try!",
+                "Okay, I give up! 😢"
+            ];
+            
+            if (noClicks <= maxNoClicks) {
+                noButton.textContent = messages[noClicks - 1];
+            }
+            
+            // Remove button after max clicks
+            if (noClicks >= maxNoClicks) {
+                noButton.style.display = 'none';
+                const message = document.createElement('div');
+                message.textContent = "Okay, I'll ask again tomorrow! 😉";
+                message.style.color = 'white';
+                message.style.marginTop = '1rem';
+                message.style.animation = 'pulse 1s infinite';
+                document.getElementById('responseButtons').appendChild(message);
+            }
+        }
+
+        // Create floating hearts
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            for (let i = 0; i < 50; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤';
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heartsContainer.appendChild(heart);
+            }
+        }
+
+        // Reveal reasons
+        function revealReasons() {
+            document.getElementById('reasons').style.display = 'block';
+            document.getElementById('responseButtons').style.display = 'block';
+            document.querySelectorAll('.reason').forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.transform = 'scale(1)';
+                }, index * 300);
+            });
+        }
+
+        // Handle Yes button
+        function handleYes() {
+            alert("YAY! 😍 You just made me the happiest person! Let's plan something amazing!");
+            // Add confetti effect
+            for(let i = 0; i < 100; i++) {
+                createConfetti();
+            }
+        }
+
+        // Handle No button hover
+        function dodgeNo() {
+            const noBtn = document.getElementById('noBtn');
+            noBtn.style.position = 'relative';
+            noBtn.style.left = Math.random() * 100 - 50 + 'px';
+            noBtn.style.top = Math.random() * 100 - 50 + 'px';
+        }
+
+        // Confetti effect
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.animation = `float ${2 + Math.random() * 3}s linear`;
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => {
+                confetti.remove();
+            }, 5000);
+        }
+
+        // Initialize
+        createHearts();
+    </script>
+</body>
+</html>
